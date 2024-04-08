@@ -12,25 +12,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.InstaClone"
         tools:targetApi="31">
+
         <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HomeActivity"
-            android:exported="false"
-            android:label="@string/title_activity_home" />
-        <activity
-            android:name=".SignupActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name="com.ritesh.instaclone.ui.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name="com.ritesh.instaclone.ui.activities.ReelsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ritesh.instaclone.ui.activities.PostsActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ritesh.instaclone.ui.activities.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.ritesh.instaclone.ui.activities.HomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home" />
+        <activity
+            android:name="com.ritesh.instaclone.ui.activities.SignupActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

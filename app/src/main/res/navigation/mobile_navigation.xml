@@ -4,29 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     app:startDestination="@id/home">
+
     <fragment
         android:id="@+id/home"
-        android:name="com.example.instaclone.fragments.HomeFragment"
+        android:name="com.ritesh.instaclone.ui.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/search"
-        android:name="com.example.instaclone.fragments.SearchFragment"
+        android:name="com.ritesh.instaclone.ui.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
-    <fragment
+    <dialog
         android:id="@+id/add"
-        android:name="com.example.instaclone.fragments.AddFragment"
+        android:name="com.ritesh.instaclone.ui.fragments.AddFragment"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add" />
     <fragment
         android:id="@+id/reel"
-        android:name="com.example.instaclone.fragments.ReelFragment"
+        android:name="com.ritesh.instaclone.ui.fragments.ReelFragment"
         android:label="fragment_reel"
         tools:layout="@layout/fragment_reel" />
     <fragment
         android:id="@+id/profile"
-        android:name="com.example.instaclone.fragments.ProfileFragment"
+        android:name="com.ritesh.instaclone.ui.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>
