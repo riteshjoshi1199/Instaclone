@@ -17,9 +17,6 @@ import com.ritesh.instaclone.ui.adepters.MyReelRecyclerViewAdapter
 
 class MyReelsFragment: Fragment() {
     private lateinit var binding: FragmentMyReelsBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

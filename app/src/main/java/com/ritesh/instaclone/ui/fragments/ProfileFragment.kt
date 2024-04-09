@@ -21,15 +21,10 @@ class ProfileFragment: Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var viewPagerAdepter: ViewPagerAdepter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         binding.EditProfileButton.setOnClickListener {
@@ -38,11 +33,13 @@ class ProfileFragment: Fragment() {
             activity?.startActivity(intent)
             activity?.finish()
         }
+
         viewPagerAdepter = ViewPagerAdepter(requireActivity().supportFragmentManager)
-        viewPagerAdepter.addFragments(MyPostFragment(), "my post")
-        viewPagerAdepter.addFragments(MyReelsFragment(), "my reels")
-        binding.ViewPager.adapter = viewPagerAdepter
-        binding.Tablayout.setupWithViewPager(binding.ViewPager)
+        viewPagerAdepter.addFragments(MyPostFragment(), "Post")
+        viewPagerAdepter.addFragments(MyReelsFragment(), "Reels")
+
+        binding.viewPager.adapter = viewPagerAdepter
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
 
         return binding.root
     }

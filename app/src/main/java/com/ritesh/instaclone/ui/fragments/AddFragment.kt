@@ -17,13 +17,13 @@ class AddFragment: BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = FragmentAddBinding.inflate(inflater, container, false)
 
         binding.post.setOnClickListener {
             activity?.startActivity(Intent(requireContext(), PostsActivity::class.java))
             activity?.finish()
         }
+
         binding.reel.setOnClickListener {
             activity?.startActivity(Intent(requireContext(), ReelsActivity::class.java))
             activity?.finish()

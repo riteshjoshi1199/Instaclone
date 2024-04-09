@@ -16,28 +16,27 @@ import com.ritesh.instaclone.ui.adepters.MyPostRecyclerViewAdapter
 
 class MyPostFragment: Fragment() {
     private lateinit var binding: FragmentMyPostBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val postList = ArrayList<Post>()
+    private val adepter: MyPostRecyclerViewAdapter by lazy {
+        MyPostRecyclerViewAdapter(postList)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentMyPostBinding.inflate(inflater, container, false)
-        var postList = ArrayList<Post>()
-        var adepter = MyPostRecyclerViewAdapter(requireContext(), postList)
-        binding.MyRecyclerView.layoutManager =
-            StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-        binding.MyRecyclerView.adapter = adepter
-        Firebase.firestore.collection(Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
-            var tempList = arrayListOf<Post>()
-            for (i in it.documents) {
-                var post: Post = i.toObject<Post>()!!
-                tempList.add(post)
+        binding.myRecyclerView.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        binding.myRecyclerView.adapter = adepter
 
+        Firebase.firestore.collection(Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
+            val tempList = arrayListOf<Post>()
+            for (i in it.documents) {
+                val post: Post = i.toObject<Post>()!!
+                tempList.add(post)
             }
+
             postList.addAll(tempList)
             adepter.notifyDataSetChanged()
         }
