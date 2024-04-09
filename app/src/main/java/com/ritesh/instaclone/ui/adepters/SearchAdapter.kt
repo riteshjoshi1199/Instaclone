@@ -1,6 +1,5 @@
 package com.ritesh.instaclone.ui.adepters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,12 +12,11 @@ import com.ritesh.instaclone.data.models.User
 import com.ritesh.instaclone.data.utils.FOLLOW
 import com.squareup.picasso.Picasso
 
-class SearchAdapter(var context: Context, var userList: ArrayList<User>) :
-    RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
-    inner class ViewHolder(var binding: SearchRvBinding) : RecyclerView.ViewHolder(binding.root)
+class SearchAdapter(private var userList: ArrayList<User>): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+    inner class ViewHolder(var binding: SearchRvBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var binding = SearchRvBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = SearchRvBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -27,39 +25,38 @@ class SearchAdapter(var context: Context, var userList: ArrayList<User>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var isfollow=false
+        var isfollow = false
 
-        Picasso.get().load(userList.get(position).image).placeholder(R.drawable.user)
+        Picasso.get().load(userList[position].image)
+            .placeholder(R.drawable.user)
             .into(holder.binding.profileImage)
-        holder.binding.name.text = userList.get(position).name
 
-        Firebase.firestore.collection(Firebase.auth.currentUser!!.uid+ FOLLOW)
-            .whereEqualTo("email", userList.get(position).email).get().addOnSuccessListener {
-                if (it.documents.size==0) {
-                    isfollow=false
+        holder.binding.name.text = userList[position].name
+
+        Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + FOLLOW)
+            .whereEqualTo("email", userList[position].email).get().addOnSuccessListener {
+                if (it.documents.size == 0) {
+                    isfollow = false
                 } else {
-                    holder.binding.follow.text = "unfollow"
-                    isfollow=true
+                    holder.binding.followBt.text = "Unfollow"
+                    isfollow = true
                 }
             }
-        holder.binding.follow.setOnClickListener {
-            if (isfollow){
-                Firebase.firestore.collection(Firebase.auth.currentUser!!.uid+ FOLLOW)
-                    .whereEqualTo("email", userList.get(position).email).get().addOnSuccessListener {
 
-                        Firebase.firestore.collection(Firebase.auth.currentUser!!.uid+ FOLLOW).document(it.documents.get(0).id).delete()
-                        holder.binding.follow.text="follow"
-                        isfollow=false
-
+        holder.binding.followBt.setOnClickListener {
+            if (isfollow) {
+                Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + FOLLOW)
+                    .whereEqualTo("email", userList[position].email).get().addOnSuccessListener {
+                        Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + FOLLOW).document(it.documents[0].id).delete()
+                        holder.binding.followBt.text = "Follow"
+                        isfollow = false
                     }
-            }else{
-                Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + FOLLOW).document()
-                    .set(userList.get(position))
-                holder.binding.follow.text = "unfollow"
-                isfollow=true
+
+            } else {
+                Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + FOLLOW).document().set(userList[position])
+                holder.binding.followBt.text = "Unfollow"
+                isfollow = true
             }
-
         }
-
     }
 }

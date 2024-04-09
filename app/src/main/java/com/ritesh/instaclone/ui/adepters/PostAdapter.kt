@@ -33,8 +33,6 @@ class PostAdapter(private var postList: ArrayList<Post>): RecyclerView.Adapter<P
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         try {
             val userId = postList[position].uid
-
-            Log.d(TAG, "onBindViewHolder: userId $userId")
             Firebase.firestore.collection(USER_NODE).document(userId).get()
                 .addOnSuccessListener {
                     val user: User? = it.toObject<User?>()

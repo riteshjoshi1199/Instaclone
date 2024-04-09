@@ -20,8 +20,10 @@ import com.ritesh.instaclone.ui.adepters.SearchAdapter
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
 
-    private lateinit var searchAdapter: SearchAdapter
     private var userList = ArrayList<User>()
+    private val searchAdapter: SearchAdapter by lazy {
+        SearchAdapter(userList)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +31,6 @@ class SearchFragment : Fragment() {
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         binding.srv.layoutManager = LinearLayoutManager(requireContext())
-        searchAdapter = SearchAdapter(requireContext(), userList)
         binding.srv.adapter = searchAdapter
 
         return binding.root
@@ -55,8 +56,6 @@ class SearchFragment : Fragment() {
             } else {
                 //do nothing
             }
-
-
         }
 
         binding.searchButton.setOnClickListener {

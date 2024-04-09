@@ -26,10 +26,14 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
     private var followList = ArrayList<User>()
-    private lateinit var followAdapter: FollowAdapter
+    private val followAdapter: FollowAdapter by lazy {
+        FollowAdapter(followList)
+    }
 
     private var postList = ArrayList<Post>()
-    private lateinit var postAdapter: PostAdapter
+    private val postAdapter: PostAdapter by lazy {
+        PostAdapter(postList)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +43,9 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         binding.followRv.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        followAdapter = FollowAdapter(followList)
         binding.followRv.adapter = followAdapter
 
         binding.homerv.layoutManager = LinearLayoutManager(requireContext())
-        postAdapter = PostAdapter(postList)
         binding.homerv.adapter = postAdapter
 
         setHasOptionsMenu(true)
