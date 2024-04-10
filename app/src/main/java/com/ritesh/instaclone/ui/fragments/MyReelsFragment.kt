@@ -11,15 +11,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.ritesh.instaclone.data.models.Reel
+import com.ritesh.instaclone.data.models.ReelModel
 import com.ritesh.instaclone.data.utils.REEL
 import com.ritesh.instaclone.ui.adepters.MyReelRecyclerViewAdapter
 
 class MyReelsFragment: Fragment() {
     private lateinit var binding: FragmentMyReelsBinding
-    private var reelList = ArrayList<Reel>()
+    private var reelModelList = ArrayList<ReelModel>()
     private val myReelRecyclerViewAdapter: MyReelRecyclerViewAdapter by lazy {
-        MyReelRecyclerViewAdapter(reelList)
+        MyReelRecyclerViewAdapter(reelModelList)
     }
 
     override fun onCreateView(
@@ -37,13 +37,13 @@ class MyReelsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + REEL).get().addOnSuccessListener {
-            val tempList = arrayListOf<Reel>()
+            val tempList = arrayListOf<ReelModel>()
             for (i in it.documents) {
-                val reel: Reel = i.toObject<Reel>()!!
-                tempList.add(reel)
+                val reelModel: ReelModel = i.toObject<ReelModel>()!!
+                tempList.add(reelModel)
 
             }
-            reelList.addAll(tempList)
+            reelModelList.addAll(tempList)
             myReelRecyclerViewAdapter.notifyDataSetChanged()
         }
     }

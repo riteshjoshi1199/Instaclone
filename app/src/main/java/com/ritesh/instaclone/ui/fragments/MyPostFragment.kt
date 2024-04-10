@@ -11,14 +11,14 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.ritesh.instaclone.data.models.Post
+import com.ritesh.instaclone.data.models.PostModel
 import com.ritesh.instaclone.ui.adepters.MyPostRecyclerViewAdapter
 
 class MyPostFragment: Fragment() {
     private lateinit var binding: FragmentMyPostBinding
-    private val postList = ArrayList<Post>()
+    private val postModelList = ArrayList<PostModel>()
     private val adepter: MyPostRecyclerViewAdapter by lazy {
-        MyPostRecyclerViewAdapter(postList)
+        MyPostRecyclerViewAdapter(postModelList)
     }
 
     override fun onCreateView(
@@ -31,13 +31,13 @@ class MyPostFragment: Fragment() {
         binding.myRecyclerView.adapter = adepter
 
         Firebase.firestore.collection(Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
-            val tempList = arrayListOf<Post>()
+            val tempList = arrayListOf<PostModel>()
             for (i in it.documents) {
-                val post: Post = i.toObject<Post>()!!
-                tempList.add(post)
+                val postModel: PostModel = i.toObject<PostModel>()!!
+                tempList.add(postModel)
             }
 
-            postList.addAll(tempList)
+            postModelList.addAll(tempList)
             adepter.notifyDataSetChanged()
         }
         return binding.root

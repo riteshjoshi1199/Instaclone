@@ -1,6 +1,6 @@
 package com.ritesh.instaclone.data.models
 
-class Post {
+class PostModel {
     var postUrl: String = ""
     var caption: String = ""
     var uid: String = ""

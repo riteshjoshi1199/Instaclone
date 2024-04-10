@@ -5,27 +5,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.instaclone.databinding.FragmentAddBinding
+import com.example.instaclone.databinding.FragmentAddContentBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.ritesh.instaclone.ui.activities.PostsActivity
-import com.ritesh.instaclone.ui.activities.ReelsActivity
+import com.ritesh.instaclone.ui.activities.AddPostActivity
+import com.ritesh.instaclone.ui.activities.AddReelActivity
 
-class AddFragment: BottomSheetDialogFragment() {
-    private lateinit var binding: FragmentAddBinding
+class AddContentFragment: BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentAddContentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentAddBinding.inflate(inflater, container, false)
+        binding = FragmentAddContentBinding.inflate(inflater, container, false)
 
         binding.post.setOnClickListener {
-            activity?.startActivity(Intent(requireContext(), PostsActivity::class.java))
+            activity?.startActivity(Intent(requireContext(), AddPostActivity::class.java))
             activity?.finish()
         }
 
         binding.reel.setOnClickListener {
-            activity?.startActivity(Intent(requireContext(), ReelsActivity::class.java))
+            activity?.startActivity(Intent(requireContext(), AddReelActivity::class.java))
             activity?.finish()
 
         }

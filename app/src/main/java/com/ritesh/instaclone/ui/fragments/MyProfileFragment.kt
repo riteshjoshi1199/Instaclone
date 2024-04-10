@@ -6,26 +6,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.instaclone.databinding.FragmentProfileBinding
+import com.example.instaclone.databinding.FragmentMyProfileBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.ritesh.instaclone.data.models.User
+import com.ritesh.instaclone.data.models.MyUserModel
 import com.ritesh.instaclone.data.utils.USER_NODE
 import com.ritesh.instaclone.ui.activities.SignupActivity
 import com.ritesh.instaclone.ui.adepters.ViewPagerAdepter
 import com.squareup.picasso.Picasso
 
-class ProfileFragment: Fragment() {
-    private lateinit var binding: FragmentProfileBinding
+class MyProfileFragment: Fragment() {
+    private lateinit var binding: FragmentMyProfileBinding
     private lateinit var viewPagerAdepter: ViewPagerAdepter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        binding = FragmentMyProfileBinding.inflate(inflater, container, false)
         viewPagerAdepter = ViewPagerAdepter(requireActivity().supportFragmentManager)
         viewPagerAdepter.addFragments(MyPostFragment(), "Post")
         viewPagerAdepter.addFragments(MyReelsFragment(), "Reels")
@@ -40,7 +40,7 @@ class ProfileFragment: Fragment() {
 
         binding.EditProfileButton.setOnClickListener {
             val intent = Intent(activity, SignupActivity::class.java)
-            intent.putExtra("MODE", 1)
+            intent.putExtra("MODE", SignupActivity.MODE_PROFILE_EDIT)
             activity?.startActivity(intent)
             activity?.finish()
         }
@@ -50,11 +50,11 @@ class ProfileFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         Firebase.firestore.collection(USER_NODE).document(Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
-            val user: User = it.toObject<User>()!!
-            binding.name.text = user.name
-            binding.bio.text = user.email
-            if (!user.image.isNullOrEmpty()) {
-                Picasso.get().load(user.image).into(binding.profileImage)
+            val myUserModel: MyUserModel = it.toObject<MyUserModel>()!!
+            binding.name.text = myUserModel.name
+            binding.bio.text = myUserModel.email
+            if (!myUserModel.image.isNullOrEmpty()) {
+                Picasso.get().load(myUserModel.image).into(binding.profileImage)
             }
         }
     }

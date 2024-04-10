@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_gravity="bottom"
     android:padding="10dp"
-    tools:context="com.ritesh.instaclone.ui.fragments.AddFragment">
+    tools:context="com.ritesh.instaclone.ui.fragments.AddContentFragment">
 
     <LinearLayout
         android:id="@+id/post"

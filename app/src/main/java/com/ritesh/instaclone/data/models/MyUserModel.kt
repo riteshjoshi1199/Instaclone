@@ -2,7 +2,7 @@ package com.ritesh.instaclone.data.models
 
 //todo: use data class remove
 
-class User {
+class MyUserModel {
     var image: String? = null
     var name: String? = null
     var email: String? = null

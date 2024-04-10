@@ -12,7 +12,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.ritesh.instaclone.data.models.User
+import com.ritesh.instaclone.data.models.MyUserModel
 import com.ritesh.instaclone.data.utils.USER_NODE
 import com.ritesh.instaclone.ui.adepters.SearchAdapter
 
@@ -20,9 +20,9 @@ import com.ritesh.instaclone.ui.adepters.SearchAdapter
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
 
-    private var userList = ArrayList<User>()
+    private var myUserModelList = ArrayList<MyUserModel>()
     private val searchAdapter: SearchAdapter by lazy {
-        SearchAdapter(userList)
+        SearchAdapter(myUserModelList)
     }
 
     override fun onCreateView(
@@ -40,18 +40,18 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Firebase.firestore.collection(USER_NODE).get().addOnSuccessListener {
-            val tempList = ArrayList<User>()
-            userList.clear()
+            val tempList = ArrayList<MyUserModel>()
+            myUserModelList.clear()
 
             if (it.documents.isNotEmpty()) {
                 for (i in it.documents) {
                     if (i.id != Firebase.auth.currentUser!!.uid) {
-                        val user: User = i.toObject<User>()!!
-                        tempList.add(user)
+                        val myUserModel: MyUserModel = i.toObject<MyUserModel>()!!
+                        tempList.add(myUserModel)
                     }
                 }
 
-                userList.addAll(tempList)
+                myUserModelList.addAll(tempList)
                 searchAdapter.notifyDataSetChanged()
             } else {
                 //do nothing
@@ -66,16 +66,16 @@ class SearchFragment : Fragment() {
             }
 
             Firebase.firestore.collection(USER_NODE).whereEqualTo("name", searchTerm).get().addOnSuccessListener {
-                    val tempList = ArrayList<User>()
-                    userList.clear()
+                    val tempList = ArrayList<MyUserModel>()
+                    myUserModelList.clear()
                     for (i in it.documents) {
                         if (i.id != Firebase.auth.currentUser!!.uid) {
-                            val user: User = i.toObject<User>()!!
-                            tempList.add(user)
+                            val myUserModel: MyUserModel = i.toObject<MyUserModel>()!!
+                            tempList.add(myUserModel)
                         }
                     }
 
-                    userList.addAll(tempList)
+                    myUserModelList.addAll(tempList)
                     searchAdapter.notifyDataSetChanged()
                 }
         }

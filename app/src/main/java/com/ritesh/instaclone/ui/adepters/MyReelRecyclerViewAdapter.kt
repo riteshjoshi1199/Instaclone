@@ -5,24 +5,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.instaclone.databinding.MyReelRecyclerviewDesignBinding
-import com.ritesh.instaclone.data.models.Reel
+import com.example.instaclone.databinding.MyReelRvItemBinding
+import com.ritesh.instaclone.data.models.ReelModel
 
-class MyReelRecyclerViewAdapter(private var reelList: ArrayList<Reel>): RecyclerView.Adapter<MyReelRecyclerViewAdapter.ViewHolder>() {
-    inner class ViewHolder(var binding: MyReelRecyclerviewDesignBinding): RecyclerView.ViewHolder(binding.root)
+class MyReelRecyclerViewAdapter(private var reelModelList: ArrayList<ReelModel>): RecyclerView.Adapter<MyReelRecyclerViewAdapter.MyReelItemViewHolder>() {
+    inner class MyReelItemViewHolder(var binding: MyReelRvItemBinding): RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = MyReelRecyclerviewDesignBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyReelItemViewHolder {
+        val binding = MyReelRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return MyReelItemViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        return reelList.size
+        return reelModelList.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyReelItemViewHolder, position: Int) {
         Glide.with(holder.binding.postReel.context)
-            .load(reelList[position].reelUrl)
+            .load(reelModelList[position].reelUrl)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(holder.binding.postReel)
 

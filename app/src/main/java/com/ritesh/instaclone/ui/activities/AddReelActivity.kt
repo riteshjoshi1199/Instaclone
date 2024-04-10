@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.instaclone.databinding.ActivityReelsBinding
+import com.example.instaclone.databinding.ActivityAddReelBinding
 import com.example.instaclone.databinding.LayoutLoadingBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Firebase
@@ -15,15 +15,15 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
-import com.ritesh.instaclone.data.models.Reel
-import com.ritesh.instaclone.data.models.User
+import com.ritesh.instaclone.data.models.MyUserModel
+import com.ritesh.instaclone.data.models.ReelModel
 import com.ritesh.instaclone.data.utils.REEL
 import com.ritesh.instaclone.data.utils.REEL_FOLDER
 import com.ritesh.instaclone.data.utils.USER_NODE
 import java.util.UUID
 
-class ReelsActivity: AppCompatActivity() {
-    private lateinit var binding: ActivityReelsBinding
+class AddReelActivity: AppCompatActivity() {
+    private lateinit var binding: ActivityAddReelBinding
     private lateinit var videoUrl: String
 
     private val progressDialogBuilder: MaterialAlertDialogBuilder by lazy {
@@ -67,7 +67,7 @@ class ReelsActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityReelsBinding.inflate(layoutInflater)
+        binding = ActivityAddReelBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.materialToolbar)
@@ -75,7 +75,7 @@ class ReelsActivity: AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.materialToolbar.setNavigationOnClickListener {
-            startActivity(Intent(this@ReelsActivity, HomeActivity::class.java))
+            startActivity(Intent(this@AddReelActivity, HomeActivity::class.java))
             finish()
         }
 
@@ -84,19 +84,19 @@ class ReelsActivity: AppCompatActivity() {
         }
 
         binding.cancelButton.setOnClickListener {
-            startActivity(Intent(this@ReelsActivity, HomeActivity::class.java))
+            startActivity(Intent(this@AddReelActivity, HomeActivity::class.java))
             finish()
         }
 
         binding.postButton.setOnClickListener {
             Firebase.firestore.collection(USER_NODE).document(Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
-                val user: User = it.toObject<User>()!!
+                val myUserModel: MyUserModel = it.toObject<MyUserModel>()!!
 
-                val reel: Reel = Reel(videoUrl, binding.caption.editText?.text.toString(), user.image!!)
-                Firebase.firestore.collection(REEL).document().set(reel).addOnSuccessListener {
+                val reelModel: ReelModel = ReelModel(videoUrl, binding.caption.editText?.text.toString(), myUserModel.image!!)
+                Firebase.firestore.collection(REEL).document().set(reelModel).addOnSuccessListener {
                     Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + REEL).document()
-                        .set(reel).addOnSuccessListener {
-                            startActivity(Intent(this@ReelsActivity, HomeActivity::class.java))
+                        .set(reelModel).addOnSuccessListener {
+                            startActivity(Intent(this@AddReelActivity, HomeActivity::class.java))
                             finish()
                         }
                 }

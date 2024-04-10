@@ -24,10 +24,10 @@
 
 
         <activity
-            android:name="com.ritesh.instaclone.ui.activities.ReelsActivity"
+            android:name="com.ritesh.instaclone.ui.activities.AddReelActivity"
             android:exported="false" />
         <activity
-            android:name="com.ritesh.instaclone.ui.activities.PostsActivity"
+            android:name="com.ritesh.instaclone.ui.activities.AddPostActivity"
             android:exported="false" />
         <activity
             android:name="com.ritesh.instaclone.ui.activities.LoginActivity"

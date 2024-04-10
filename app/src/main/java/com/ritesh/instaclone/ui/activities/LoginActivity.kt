@@ -7,20 +7,22 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.instaclone.databinding.ActivityLoginBinding
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.ritesh.instaclone.data.models.User
+import com.ritesh.instaclone.data.models.MyUserModel
 
 class LoginActivity : AppCompatActivity() {
-    private val binding by lazy {
-        ActivityLoginBinding.inflate(layoutInflater)
-    }
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.LoginButton.setOnClickListener {
-            if (binding.email.editText?.text.toString().equals("") or
-                binding.password.editText?.text.toString().equals("")
+            val email = binding.email.editText?.text?.toString()?.trim()
+            val password = binding.password.editText?.text?.toString()?.trim()
+
+            if (email.isNullOrEmpty() || email.isBlank() ||
+                password.isNullOrEmpty() || password.isBlank()
             ) {
                 Toast.makeText(
                     this@LoginActivity,
@@ -28,12 +30,9 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                var user = User(
-                    binding.email.editText?.text.toString(),
-                    binding.password.editText?.text.toString()
-                )
+                val myUserModel = MyUserModel(email, password)
 
-                Firebase.auth.signInWithEmailAndPassword(user.email!!, user.password!!)
+                Firebase.auth.signInWithEmailAndPassword(myUserModel.email!!, myUserModel.password!!)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
                             startActivity(Intent(this@LoginActivity, HomeActivity::class.java))

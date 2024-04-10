@@ -9,15 +9,15 @@ import com.example.instaclone.databinding.FragmentReelBinding
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.ritesh.instaclone.data.models.Reel
+import com.ritesh.instaclone.data.models.ReelModel
 import com.ritesh.instaclone.data.utils.REEL
 import com.ritesh.instaclone.ui.adepters.ReelAdapter
 
 class ReelFragment: Fragment() {
     private lateinit var binding: FragmentReelBinding
-    private var reelList = ArrayList<Reel>()
+    private var reelModelList = ArrayList<ReelModel>()
     private val reelAdapter: ReelAdapter by lazy {
-        ReelAdapter(reelList)
+        ReelAdapter(reelModelList)
     }
 
     override fun onCreateView(
@@ -34,14 +34,14 @@ class ReelFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Firebase.firestore.collection(REEL).get().addOnSuccessListener {
-            val tempList = ArrayList<Reel>()
-            reelList.clear()
+            val tempList = ArrayList<ReelModel>()
+            reelModelList.clear()
             for (i in it.documents) {
-                val reel = i.toObject<Reel>()!!
-                tempList.add(reel)
+                val reelModel = i.toObject<ReelModel>()!!
+                tempList.add(reelModel)
             }
-            reelList.addAll(tempList)
-            reelList.reverse()
+            reelModelList.addAll(tempList)
+            reelModelList.reverse()
             reelAdapter.notifyDataSetChanged()
         }
     }

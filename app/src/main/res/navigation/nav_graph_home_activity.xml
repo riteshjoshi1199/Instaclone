@@ -17,9 +17,9 @@
         tools:layout="@layout/fragment_search" />
     <dialog
         android:id="@+id/add"
-        android:name="com.ritesh.instaclone.ui.fragments.AddFragment"
+        android:name="com.ritesh.instaclone.ui.fragments.AddContentFragment"
         android:label="fragment_add"
-        tools:layout="@layout/fragment_add" />
+        tools:layout="@layout/fragment_add_content" />
     <fragment
         android:id="@+id/reel"
         android:name="com.ritesh.instaclone.ui.fragments.ReelFragment"
@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_reel" />
     <fragment
         android:id="@+id/profile"
-        android:name="com.ritesh.instaclone.ui.fragments.ProfileFragment"
+        android:name="com.ritesh.instaclone.ui.fragments.MyProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_my_profile" />
 </navigation>

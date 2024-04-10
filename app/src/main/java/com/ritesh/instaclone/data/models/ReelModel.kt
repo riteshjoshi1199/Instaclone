@@ -1,6 +1,6 @@
 package com.ritesh.instaclone.data.models
 
-class Reel {
+class ReelModel {
     var reelUrl: String = ""
     var caption: String = ""
     var profileLink: String? = null

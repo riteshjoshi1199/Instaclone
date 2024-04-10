@@ -15,8 +15,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.ritesh.instaclone.data.models.Post
-import com.ritesh.instaclone.data.models.User
+import com.ritesh.instaclone.data.models.MyUserModel
+import com.ritesh.instaclone.data.models.PostModel
 import com.ritesh.instaclone.data.utils.FOLLOW
 import com.ritesh.instaclone.data.utils.POST
 import com.ritesh.instaclone.ui.adepters.FollowAdapter
@@ -25,14 +25,14 @@ import com.ritesh.instaclone.ui.adepters.PostAdapter
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
-    private var followList = ArrayList<User>()
+    private var followList = ArrayList<MyUserModel>()
     private val followAdapter: FollowAdapter by lazy {
         FollowAdapter(followList)
     }
 
-    private var postList = ArrayList<Post>()
+    private var postModelList = ArrayList<PostModel>()
     private val postAdapter: PostAdapter by lazy {
-        PostAdapter(postList)
+        PostAdapter(postModelList)
     }
 
     override fun onCreateView(
@@ -70,10 +70,10 @@ class HomeFragment : Fragment() {
     private fun setupMyFollowers() {
         Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + FOLLOW).get()
             .addOnSuccessListener {
-                val tempList = ArrayList<User>()
+                val tempList = ArrayList<MyUserModel>()
                 for (i in it.documents) {
-                    val user: User = i.toObject<User>()!!
-                    tempList.add(user)
+                    val myUserModel: MyUserModel = i.toObject<MyUserModel>()!!
+                    tempList.add(myUserModel)
                 }
                 followList.addAll(tempList)
                 followAdapter.notifyDataSetChanged()
@@ -83,15 +83,15 @@ class HomeFragment : Fragment() {
 
     private fun setupAllPostFeed() {
         Firebase.firestore.collection(POST).get().addOnSuccessListener {
-            val tempList = ArrayList<Post>()
-            postList.clear()
+            val tempList = ArrayList<PostModel>()
+            postModelList.clear()
 
             for (i in it.documents) {
-                val post: Post = i.toObject<Post>()!!
-                tempList.add(post)
+                val postModel: PostModel = i.toObject<PostModel>()!!
+                tempList.add(postModel)
             }
 
-            postList.addAll(tempList)
+            postModelList.addAll(tempList)
             postAdapter.notifyDataSetChanged()
         }
     }

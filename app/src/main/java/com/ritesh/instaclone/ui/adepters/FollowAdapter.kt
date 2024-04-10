@@ -5,21 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.instaclone.R
-import com.example.instaclone.databinding.FollowRvBinding
-import com.ritesh.instaclone.data.models.User
+import com.example.instaclone.databinding.FollowRvItemBinding
+import com.ritesh.instaclone.data.models.MyUserModel
 
-class FollowAdapter(private var followList: ArrayList<User>): RecyclerView.Adapter<FollowAdapter.ViewHolder>() {
+class FollowAdapter(private var followList: ArrayList<MyUserModel>): RecyclerView.Adapter<FollowAdapter.FollowItemViewHolder>() {
 
-    inner class ViewHolder(val binding: FollowRvBinding): RecyclerView.ViewHolder(binding.root)
+    inner class FollowItemViewHolder(val binding: FollowRvItemBinding): RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = FollowRvBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FollowItemViewHolder {
+        val binding = FollowRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FollowItemViewHolder(binding)
     }
 
     override fun getItemCount(): Int = followList.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FollowItemViewHolder, position: Int) {
 
         Glide.with(holder.binding.storyimage.context)
             .load(followList[position].image)

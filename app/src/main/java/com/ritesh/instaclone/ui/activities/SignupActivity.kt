@@ -1,6 +1,7 @@
 package com.ritesh.instaclone.ui.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.widget.Toast
@@ -12,21 +13,33 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import com.ritesh.instaclone.data.models.User
+import com.google.firebase.storage.FirebaseStorage
+import com.ritesh.instaclone.data.models.MyUserModel
 import com.ritesh.instaclone.data.utils.USER_NODE
 import com.ritesh.instaclone.data.utils.USER_PROFILE_FOLDER
-import com.ritesh.instaclone.data.utils.uploadImage
 import com.squareup.picasso.Picasso
+import java.util.UUID
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
-    private lateinit var user: User
+    private lateinit var myUserModel: MyUserModel
+
+    private fun uploadImage(uri: Uri, callback: (String?) -> Unit) {
+        FirebaseStorage.getInstance().getReference(USER_PROFILE_FOLDER).child(UUID.randomUUID().toString())
+            .putFile(uri).addOnSuccessListener { ref ->
+                ref.storage.downloadUrl.addOnSuccessListener { url ->
+                    val imageUrl = url.toString()
+                    callback(imageUrl)
+                }
+            }
+    }
+
 
     private val launcher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-            uploadImage(uri, USER_PROFILE_FOLDER) {
+            uploadImage(uri) {
                 if (it != null) {
-                    user.image = it
+                    myUserModel.image = it
                     binding.profileImage.setImageURI(uri)
                 }
             }
@@ -37,6 +50,7 @@ class SignupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        myUserModel = MyUserModel()
 
         //todo use movable action method for string.
         val text = "<font color=#FF000000>Already have an Account</font> <font color=#1E88E5>Login?</font>"
@@ -46,37 +60,23 @@ class SignupActivity : AppCompatActivity() {
             finish()
         }
 
-        user = User()
         if (intent.hasExtra("MODE")) {
-            if (intent.getIntExtra("MODE", -1) == 1)
-                binding.SignUpButton.text = "EditProfile"
+            if (intent.getIntExtra("MODE", -1) == MODE_PROFILE_EDIT)
+                binding.signUpButton.text = "EditProfile"
 
             Firebase.firestore.collection(USER_NODE).document(Firebase.auth.currentUser!!.uid).get()
                 .addOnSuccessListener {
-                    user = it.toObject<User>()!!
-                    if (!user.image.isNullOrEmpty()) {
-                        Picasso.get().load(user.image).into(binding.profileImage)
+                    myUserModel = it.toObject<MyUserModel>()!!
+                    if (!myUserModel.image.isNullOrEmpty()) {
+                        Picasso.get().load(myUserModel.image).into(binding.profileImage)
                     }
-                    binding.name.editText?.setText(user.name)
-                    binding.email.editText?.setText(user.email)
-                    binding.password.editText?.setText(user.password)
-
+                    binding.name.editText?.setText(myUserModel.name)
+                    binding.email.editText?.setText(myUserModel.email)
+                    binding.password.editText?.setText(myUserModel.password)
                 }
         }
 
-        binding.SignUpButton.setOnClickListener {
-
-            if (intent.hasExtra("MODE")) {
-                if (intent.getIntExtra("MODE", -1) == 1) {
-                    Firebase.firestore.collection(USER_NODE)
-                        .document(Firebase.auth.currentUser!!.uid).set(user)
-                        .addOnSuccessListener {
-                            startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
-                            finish()
-                        }
-                }
-            }
-
+        binding.signUpButton.setOnClickListener {
 
             val name = binding.name.editText?.text?.toString()?.trim()
             val email = binding.email.editText?.text?.toString()?.trim()
@@ -104,30 +104,41 @@ class SignupActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                    email,
-                    password
-                ).addOnCompleteListener { result ->
-                    if (result.isSuccessful) {
-                        user.name = name
-                        user.email = email
-                        user.password = password
-
+                if (intent.hasExtra("MODE")) {
+                    if (intent.getIntExtra("MODE", -1) == MODE_PROFILE_EDIT) {
+                        myUserModel = MyUserModel(name, email, password)
                         Firebase.firestore.collection(USER_NODE)
-                            .document(Firebase.auth.currentUser!!.uid).set(user)
+                            .document(Firebase.auth.currentUser!!.uid).set(myUserModel)
                             .addOnSuccessListener {
                                 startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
                                 finish()
                             }
+                    }
+                } else {
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener { result ->
+                        if (result.isSuccessful) {
+                            myUserModel.name = name
+                            myUserModel.email = email
+                            myUserModel.password = password
 
-                    } else {
-                        Toast.makeText(
-                            this@SignupActivity,
-                            result.exception?.localizedMessage ?: "Something went wrong!!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            Firebase.firestore.collection(USER_NODE)
+                                .document(Firebase.auth.currentUser!!.uid).set(myUserModel)
+                                .addOnSuccessListener {
+                                    startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+                                    finish()
+                                }
+
+                        } else {
+                            Toast.makeText(
+                                this@SignupActivity,
+                                result.exception?.localizedMessage ?: "Something went wrong!!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
+
+
             }
         }
 
@@ -143,5 +154,10 @@ class SignupActivity : AppCompatActivity() {
         return email.isNotEmpty() && pattern.matcher(email).matches()
     }
 
+
+    companion object {
+        private const val TAG = "SignupActivity"
+        const val MODE_PROFILE_EDIT = 1
+    }
 }
 
