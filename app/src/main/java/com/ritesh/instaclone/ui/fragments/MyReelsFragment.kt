@@ -17,32 +17,35 @@ import com.ritesh.instaclone.ui.adepters.MyReelRecyclerViewAdapter
 
 class MyReelsFragment: Fragment() {
     private lateinit var binding: FragmentMyReelsBinding
+    private var reelList = ArrayList<Reel>()
+    private val myReelRecyclerViewAdapter: MyReelRecyclerViewAdapter by lazy {
+        MyReelRecyclerViewAdapter(reelList)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentMyReelsBinding.inflate(inflater, container, false)
-        var reelList = ArrayList<Reel>()
-        var adepter = MyReelRecyclerViewAdapter(requireContext(), reelList)
-        binding.MyRecyclerView.layoutManager =
-            StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
-        binding.MyRecyclerView.adapter = adepter
+        binding.myRecyclerView.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        binding.myRecyclerView.adapter = myReelRecyclerViewAdapter
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         Firebase.firestore.collection(Firebase.auth.currentUser!!.uid + REEL).get().addOnSuccessListener {
-            var tempList = arrayListOf<Reel>()
+            val tempList = arrayListOf<Reel>()
             for (i in it.documents) {
-                var reel: Reel = i.toObject<Reel>()!!
+                val reel: Reel = i.toObject<Reel>()!!
                 tempList.add(reel)
 
             }
             reelList.addAll(tempList)
-            adepter.notifyDataSetChanged()
+            myReelRecyclerViewAdapter.notifyDataSetChanged()
         }
-        return binding.root
     }
 
-    companion object {
-
-    }
 }

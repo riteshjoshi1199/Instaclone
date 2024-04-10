@@ -26,6 +26,17 @@ class ProfileFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
+        viewPagerAdepter = ViewPagerAdepter(requireActivity().supportFragmentManager)
+        viewPagerAdepter.addFragments(MyPostFragment(), "Post")
+        viewPagerAdepter.addFragments(MyReelsFragment(), "Reels")
+
+        binding.viewPager.adapter = viewPagerAdepter
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.EditProfileButton.setOnClickListener {
             val intent = Intent(activity, SignupActivity::class.java)
@@ -33,35 +44,18 @@ class ProfileFragment: Fragment() {
             activity?.startActivity(intent)
             activity?.finish()
         }
-
-        viewPagerAdepter = ViewPagerAdepter(requireActivity().supportFragmentManager)
-        viewPagerAdepter.addFragments(MyPostFragment(), "Post")
-        viewPagerAdepter.addFragments(MyReelsFragment(), "Reels")
-
-        binding.viewPager.adapter = viewPagerAdepter
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
-
-        return binding.root
     }
 
-
-    companion object {
-
-    }
 
     override fun onStart() {
         super.onStart()
-        Firebase.firestore.collection(USER_NODE).document(Firebase.auth.currentUser!!.uid).get()
-            .addOnSuccessListener {
-                val user: User =
-                    it.toObject<User>()!!
-                binding.name.text = user.name
-                binding.bio.text = user.email
-                if (!user.image.isNullOrEmpty()) {
-                    Picasso.get().load(user.image).into(binding.profileImage)
-                }
-
-
+        Firebase.firestore.collection(USER_NODE).document(Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
+            val user: User = it.toObject<User>()!!
+            binding.name.text = user.name
+            binding.bio.text = user.email
+            if (!user.image.isNullOrEmpty()) {
+                Picasso.get().load(user.image).into(binding.profileImage)
             }
+        }
     }
 }
